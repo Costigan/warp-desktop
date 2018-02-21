@@ -1,0 +1,30 @@
+/* eslint-disable no-undef */
+
+const web_dictionary_prefix = "http://localhost:8000/dictionary/demo";
+
+function get_dictionary(query, cb) {
+  return fetch(web_dictionary_prefix+query, {
+    accept: "application/json"
+  })
+    .then(checkStatus)
+    .then(parseJSON)
+    .then(cb);
+}
+
+function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  }
+  const error = new Error(`HTTP Error ${response.statusText}`);
+  error.status = response.statusText;
+  error.response = response;
+  console.log(error); // eslint-disable-line no-console
+  throw error;
+}
+
+function parseJSON(response) {
+  return response.json();
+}
+
+const Client = { get_dictionary };
+export default Client;
